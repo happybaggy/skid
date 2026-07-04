@@ -1,11 +1,3 @@
-local queueteleport = queue_on_teleport or (syn and syn.queue_on_teleport) or (fluxus and fluxus.queue_on_teleport)
-
-Players.LocalPlayer.OnTeleport:Connect(function(State)
-    if queueteleport then
-        queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/happybaggy/skid/main/havocfarm.lua'))()")
-    end
-end)
-
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
@@ -18,6 +10,14 @@ local CLICK_OFFSET_Y = 50
 
 if _G.farmLoopRunning then return end
 _G.farmLoopRunning = true
+
+local queueteleport = queue_on_teleport or (syn and syn.queue_on_teleport) or (fluxus and fluxus.queue_on_teleport)
+
+Players.LocalPlayer.OnTeleport:Connect(function(State)
+    if queueteleport then
+        queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/happybaggy/skid/main/havocfarm.lua'))()")
+    end
+end)
 
 local function clickObject(obj)
 	if not obj or not obj:IsA("GuiObject") then return end
