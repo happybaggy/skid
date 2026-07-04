@@ -1,7 +1,10 @@
 local queueteleport = queue_on_teleport or (syn and syn.queue_on_teleport) or (fluxus and fluxus.queue_on_teleport)
-if queueteleport then
-    queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/happybaggy/skid/main/havocfarm.lua'))()")
-end
+
+Players.LocalPlayer.OnTeleport:Connect(function(State)
+    if queueteleport then
+        queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/happybaggy/skid/main/havocfarm.lua'))()")
+    end
+end)
 
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
@@ -203,6 +206,7 @@ while true do
 		dialogueFrame = PlayerGui:FindFirstChild("UI") and PlayerGui.UI:FindFirstChild("temp") and PlayerGui.UI.temp:FindFirstChild("dialogueFrame")
 	end
 	sellAll()
+
 	TeleportService:Teleport(game.PlaceId)
 	task.wait(5)
 end
