@@ -380,12 +380,9 @@ function Library:CreateWindow(title, options)
         local SECTION_TOP = 28    -- px from top of tabFrame reserved for title bar area
 
         local function nextColumnSlot(heightPx)
-            -- pick the column with least used space
-            local best, bestPx = 1, self._colUsedY[1] or 0
-            -- cycle left→mid→right in insertion order so panels fill evenly
             Tab._colIdx = (Tab._colIdx % 3) + 1
-            best  = Tab._colIdx
-            bestPx = Tab._colUsedY[best]
+            local best  = Tab._colIdx
+            local bestPx = Tab._colUsedY[best] or 0
 
             local xScale = Tab._colX[best]
             local yPx    = SECTION_TOP + bestPx + (bestPx > 0 and Tab._GUTTER or 0)
