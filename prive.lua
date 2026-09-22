@@ -31,12 +31,12 @@ Library.Theme = {
     Font     = Font.new(
         "rbxasset://fonts/families/TitilliumWeb.json",
         Enum.FontWeight.Regular,
-        Enum.FontWeight.Regular
+        Enum.FontStyle.Normal
     ),
     FontBold = Font.new(
         "rbxasset://fonts/families/TitilliumWeb.json",
         Enum.FontWeight.Bold,
-        Enum.FontWeight.Regular
+        Enum.FontStyle.Normal
     ),
 }
 
