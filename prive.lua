@@ -146,12 +146,16 @@ function Library:Notify(text, duration, color)
         })
     end
     C(frame, "TextLabel", {
-        Text = text, BackgroundColor3 = Color3.fromRGB(0,0,0),
-        BackgroundTransparency = 0.85, TextStrokeTransparency = 0, 
-        TextColor3 = Color3.fromRGB(255,255,255), TextSize = 18, FontFace = FSB,
-        Size = UDim2.new(1,-6,1,-8), Position = UDim2.new(0,6,0,5),
-        TextXAlignment = Enum.TextXAlignment.Center, BorderSizePixel = 0,
-        ZIndex = 100002,
+        Text                    = text,
+        BackgroundTransparency  = 1,
+        TextColor3              = Color3.fromRGB(255,255,255),
+        TextSize                = 18,
+        FontFace                = FSB,
+        Size                    = UDim2.new(1, -12, 1, 0),
+        Position                = UDim2.new(0, 6, 0, 0),
+        TextXAlignment          = Enum.TextXAlignment.Center,
+        BorderSizePixel         = 0,
+        ZIndex                  = 100002,
     })
     local w = math.min(tW(text,18) + 16, 600)
     local h = 30
