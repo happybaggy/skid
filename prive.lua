@@ -1,12 +1,7 @@
--- ============================================================
--- baggyware UI Library  v2.0 (Patched)
--- Drop-in replacement for the hand-built buildUI() + wiring.
--- ============================================================
 
 local Library = {}
 Library.__index = Library
 
--- ─── Services ────────────────────────────────────────────────
 local UIS     = game:GetService("UserInputService")
 local RS      = game:GetService("RunService")
 local Players = game:GetService("Players")
@@ -15,14 +10,12 @@ local TS      = game:GetService("TextService")
 local CoreGui = game:GetService("CoreGui")
 local LP      = Players.LocalPlayer
 
--- ─── Fonts ───────────────────────────────────────────────────
 local F   = Font.new("rbxasset://fonts/families/TitilliumWeb.json",  Enum.FontWeight.Regular,  Enum.FontStyle.Normal)
 local FB  = Font.new("rbxasset://fonts/families/TitilliumWeb.json",  Enum.FontWeight.Bold,     Enum.FontStyle.Normal)
 local FSB = Font.new("rbxasset://fonts/families/TitilliumWeb.json",  Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
 local FN  = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular,  Enum.FontStyle.Normal)
 
--- ─── Layout constants ────────────────────────────────────────
-local SW = 145   -- section width
+local SW = 145   
 
 local COLS = {
     left   = { xScale = 0.00889, side = "left"   },
@@ -30,7 +23,6 @@ local COLS = {
     right  = { xScale = 0.67111, side = "right"   },
 }
 
--- ─── Internal helpers ────────────────────────────────────────
 
 local function N(class, props)
     local i = Instance.new(class)
@@ -68,13 +60,13 @@ local function tW(text, size)
     return TS:GetTextSize(text, size or 18, Enum.Font.TitilliumWeb, Vector2.new(9999, 9999)).X
 end
 
--- ─── Theme ───────────────────────────────────────────────────
+
 
 Library._theme = {
-    c1     = Color3.fromRGB(34, 85,  114),  -- left
-    c2     = Color3.fromRGB(34, 85,  114),  -- middle (only used when merged=false)
-    c3     = Color3.fromRGB(34, 103,  89),  -- right
-    merged = true,                          -- two-stop vs three-stop gradient
+    c1     = Color3.fromRGB(34, 85,  114),  
+    c2     = Color3.fromRGB(34, 85,  114),  
+    c3     = Color3.fromRGB(34, 103,  89),  
+    merged = true,                          
 }
 Library._windows = {}
 
@@ -102,7 +94,7 @@ function Library:_accent(side)
     local t = self._theme
     if side == "left"   then return t.c1 end
     if side == "right"  then return t.c3 end
-    -- middle
+    
     return t.merged and t.c1:Lerp(t.c3, 0.5) or t.c2
 end
 
@@ -111,7 +103,7 @@ function Library:SetTheme(cfg)
     for _, w in ipairs(self._windows) do pcall(function() w:_refreshTheme() end) end
 end
 
--- ─── Notifications ───────────────────────────────────────────
+
 
 Library._nGui  = nil
 Library._nCont = nil
@@ -171,7 +163,7 @@ function Library:Notify(text, duration, color)
     end)
 end
 
--- ─── Window ──────────────────────────────────────────────────
+
 
 local Window = {}
 Window.__index = Window
@@ -230,7 +222,7 @@ function Library:Window(cfg)
         BorderSizePixel = 0, FontFace = FB, ZIndex = 100001,
     })
 
-    -- Tooltip text stroke instead of frame border
+    
     w._tip = C(w._gui, "TextLabel", {
         Name = "Tooltip",
         BackgroundTransparency = 1, TextColor3 = Color3.fromRGB(255,255,255),
@@ -401,7 +393,7 @@ function Window:MenuBind(cfg)
     end)
 end
 
--- ─── Tab ─────────────────────────────────────────────────────
+
 
 local Tab = {}
 Tab.__index = Tab
@@ -455,7 +447,7 @@ function Window:Tab(cfg)
     return t
 end
 
--- ─── Section ─────────────────────────────────────────────────
+
 
 local Section = {}
 Section.__index = Section
@@ -526,7 +518,7 @@ function Section:_label(parent, text)
     })
 end
 
--- ─── Toggle ──────────────────────────────────────────────────
+
 
 function Section:Toggle(cfg)
     cfg   = type(cfg) == "string" and { Name=cfg } or cfg
@@ -654,7 +646,7 @@ function Section:Toggle(cfg)
     }
 end
 
--- ─── Slider ──────────────────────────────────────────────────
+
 
 function Section:Slider(cfg)
     cfg   = type(cfg) == "string" and { Name=cfg } or cfg
@@ -673,7 +665,7 @@ function Section:Slider(cfg)
     self:_label(row, labelText)
     self:_tip(row, cfg.Tooltip)
 
-    -- Calculate the exact width of the text to position the number box next to it
+    
     local textW = tW(labelText, 18)
 
     local track = C(row, "Frame", {
@@ -682,7 +674,7 @@ function Section:Slider(cfg)
         Size = UDim2.new(1, -12, 0, 12), Position = UDim2.new(0, 6, 0, 24),
     })
     local ts = Stroke(track, accent, 1.3)
-    table.insert(self._m.strokes, { ts, self._side }) -- Track slider stroke
+    table.insert(self._m.strokes, { ts, self._side }) 
     
     local fill = C(track, "Frame", {
         Name = "fill", BorderSizePixel = 0,
@@ -733,7 +725,7 @@ function Section:Slider(cfg)
     }
 end
 
--- ─── Dropdown ────────────────────────────────────────────────
+
 
 function Section:Dropdown(cfg)
     cfg   = type(cfg) == "string" and { Name=cfg } or cfg
@@ -833,7 +825,7 @@ function Section:Dropdown(cfg)
     }
 end
 
--- ─── MultiSelect ─────────────────────────────────────────────
+
 
 function Section:MultiSelect(cfg)
     cfg   = type(cfg) == "string" and { Name=cfg } or cfg
@@ -935,7 +927,7 @@ function Section:MultiSelect(cfg)
     }
 end
 
--- ─── ColorPicker ─────────────────────────────────────────────
+
 
 function Section:ColorPicker(cfg)
     cfg   = type(cfg) == "string" and { Name=cfg } or cfg
@@ -954,7 +946,7 @@ function Section:ColorPicker(cfg)
         BackgroundColor3 = current,
         Size = UDim2.new(0,40,0,10), Position = UDim2.new(0.68406,0,0.22,0),
     })
-    -- NOTE: Gradient removed here so the swatch remains a solid color.
+    
     local ss = Stroke(swatch, accent, 1.3)
     table.insert(self._m.strokes, { ss, self._side })
 
@@ -1001,7 +993,7 @@ function Section:ColorPicker(cfg)
 
     local function setColor(c)
         current = Color3.new(math.clamp(c.R,0,1), math.clamp(c.G,0,1), math.clamp(c.B,0,1))
-        -- NOTE: Set BackgroundColor3 directly since the gradient is removed.
+        
         swatch.BackgroundColor3 = current
         if cfg.OnChange then pcall(cfg.OnChange, current) end
     end
@@ -1087,7 +1079,7 @@ function Section:ColorPicker(cfg)
     }
 end
 
--- ─── TextInput ───────────────────────────────────────────────
+
 
 function Section:TextInput(cfg)
     cfg   = type(cfg) == "string" and { Name=cfg } or cfg
@@ -1126,7 +1118,7 @@ function Section:TextInput(cfg)
     }
 end
 
--- ─── Button ──────────────────────────────────────────────────
+
 
 function Section:Button(cfg)
     cfg   = type(cfg) == "string" and { Name=cfg } or cfg
@@ -1156,7 +1148,7 @@ function Section:Button(cfg)
     return { Row = row, Lbl = lbl }
 end
 
--- ─── Keybind (standalone row) ────────────────────────────────
+
 
 function Section:Keybind(cfg)
     cfg   = type(cfg) == "string" and { Name=cfg } or cfg
@@ -1213,7 +1205,7 @@ function Section:Keybind(cfg)
     return { Row=row, Label=lbl, Bind=bd, Get=function() return bd.bound, bd.mode end }
 end
 
--- ─── ScrollList ──────────────────────────────────────────────
+
 
 function Section:ScrollList(cfg)
     cfg   = type(cfg) == "string" and { Name=cfg } or cfg
@@ -1277,7 +1269,7 @@ function Section:ScrollList(cfg)
     }
 end
 
--- ─── GradientSquares ─────────────────────────────────────────
+
 
 function Section:GradientSquares(cfg)
     cfg = cfg or {}
