@@ -132,37 +132,63 @@ end
 function Library:Notify(text, duration, color)
     duration = duration or 4
     self:_ensureNotify()
+
     local frame = C(self._nCont, "Frame", {
-        BackgroundColor3 = Color3.fromRGB(255,255,255),
         BorderSizePixel  = 0,
         ClipsDescendants = true,
-        ZIndex = 100001,
-        Size   = UDim2.new(0,0,0,0),
+        ZIndex           = 100001,
+        Size             = UDim2.new(0,0,0,0),
     })
     C(frame, "UIGradient", { Color = self:_grad() })
+
     if color then
         C(frame, "Frame", {
-            BackgroundColor3 = color, BorderSizePixel = 0,
-            Size = UDim2.new(0,3,1,0), ZIndex = 100003,
+            BackgroundColor3 = color,
+            BorderSizePixel  = 0,
+            Size             = UDim2.new(0,3,1,0),
+            ZIndex           = 100003,
         })
     end
-    C(frame, "TextLabel", {
-        Text                    = text,
-        BackgroundTransparency  = 1,
-        TextColor3              = Color3.fromRGB(255,255,255),
-        TextSize                = 18,
-        FontFace                = FSB,
-        Size                    = UDim2.new(1, -12, 1, 0),
-        Position                = UDim2.new(0, 6, 0, 0),
-        TextXAlignment          = Enum.TextXAlignment.Center,
-        BorderSizePixel         = 0,
-        ZIndex                  = 100002,
+
+    -- text label exactly like the template
+    local textLabel = C(frame, "TextLabel", {
+        Text                   = text,
+        RichText               = true,
+        AutoLocalize           = false,
+        BackgroundColor3       = Color3.fromRGB(0,0,0),
+        BackgroundTransparency = 0.85,          -- <-- dark strip
+        TextColor3             = Color3.fromRGB(255,255,255),
+        TextSize               = 18,
+        FontFace               = FSB,
+        TextStrokeTransparency = 0,             -- <-- visible stroke
+        TextXAlignment         = Enum.TextXAlignment.Center,
+        TextYAlignment         = Enum.TextYAlignment.Center,
+        Size                   = UDim2.new(1, -10, 1, -8),
+        Position               = UDim2.new(0, 6, 0, 5),
+        BorderSizePixel        = 0,
+        ZIndex                 = 100002,
     })
-    local w = math.min(tW(text,18) + 16, 600)
-    local h = 26
-    frame:TweenSize(UDim2.new(0,w,0,h), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true)
+
+    -- measure with the real font (SemiBold), like the template did
+    local temp = Instance.new("TextLabel")
+    temp.FontFace     = FSB
+    temp.TextSize     = 18
+    temp.Text         = text
+    temp.TextWrapped  = false
+    temp.Parent       = self._nCont
+    temp.Visible      = false
+    task.wait()
+    local bounds = temp.TextBounds
+    temp:Destroy()
+
+    local paddingX, paddingY = 10, 6
+    local w = math.min(bounds.X + paddingX + 10, 600)
+    local h = bounds.Y + paddingY
+
+    frame:TweenSize(UDim2.new(0, w, 0, h), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true)
+
     task.delay(duration, function()
-        frame:TweenSize(UDim2.new(0,0,0,h), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true)
+        frame:TweenSize(UDim2.new(0, 0, 0, h), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true)
         task.wait(0.3)
         if frame.Parent then frame:Destroy() end
     end)
