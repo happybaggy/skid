@@ -108,12 +108,31 @@ end
 Library._nGui  = nil
 Library._nCont = nil
 
-local gui = N("ScreenGui", {
-    Name           = "__LibNotify",
-    ResetOnSpawn   = false,
-    ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
-    IgnoreGuiInset = true,   -- template's parent almost certainly has this
-}) 
+function Library:_ensureNotify()
+    if self._nGui and self._nGui.Parent then return end
+    local gui = N("ScreenGui", {
+        Name           = "__LibNotify",
+        ResetOnSpawn   = false,
+        ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
+        IgnoreGuiInset = true,   -- template's parent almost certainly has this
+    })
+    gui.Parent = CoreGui
+    local cont = C(gui, "Frame", {
+        BackgroundTransparency = 1,
+        Size = UDim2.new(1,0,0,0),
+        Position = UDim2.new(0,0,0,10),
+        ZIndex = 100000,
+    })
+    C(cont, "UIListLayout", {
+        FillDirection      = Enum.FillDirection.Vertical,
+        HorizontalAlignment= Enum.HorizontalAlignment.Right,
+        VerticalAlignment  = Enum.VerticalAlignment.Top,
+        SortOrder          = Enum.SortOrder.LayoutOrder,
+        Padding            = UDim.new(0,4),
+    })
+    self._nGui  = gui
+    self._nCont = cont
+end
 
 function Library:Notify(text, duration, color)
     duration = duration or 4
