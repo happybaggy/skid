@@ -114,7 +114,9 @@ function Library:_ensureNotify()
         Name           = "__LibNotify",
         ResetOnSpawn   = false,
         ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
-        IgnoreGuiInset = true,   -- template's parent almost certainly has this
+        IgnoreGuiInset = true,
+        DisplayOrder   = 1000000,                      -- ADD (1 above the window so notifs stay on top)
+        ScreenInsets   = Enum.ScreenInsets.None,       -- ADD
     })
     gui.Parent = CoreGui
     local cont = C(gui, "Frame", {
@@ -222,10 +224,12 @@ function Library:Window(cfg)
 
     local guiParent = (pcall(function() return syn.protect_gui end) and CoreGui) or CoreGui
     w._gui = N("ScreenGui", {
-        Name = cfg.Name or "baggyware",
+        Name           = cfg.Name or "baggyware",
         ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
         ResetOnSpawn   = false,
         Enabled        = true,
+        DisplayOrder   = 999999,                       -- ADD
+        ScreenInsets   = Enum.ScreenInsets.None,       -- ADD (equivalent to IgnoreGuiInset = true)
     })
     w._gui.Parent = guiParent
 
@@ -299,7 +303,9 @@ function Window:_watermark(text)
     self._wFrame = C(self._gui, "Frame", {
         Name = "watermark", BorderSizePixel = 0,
         BackgroundColor3 = Color3.fromRGB(255,255,255),
-        Size = UDim2.new(0,174,0,26), Position = UDim2.new(0,5,0,2), ZIndex = 99999,
+        Size     = UDim2.new(0,174,0,26),
+        Position = UDim2.new(0, 5, 0, 5),
+        ZIndex   = 99999,
     })
     self._wGrad = C(self._wFrame, "UIGradient", { Name="uig", Color = Library:_grad() })
     self._wLabel = C(self._wFrame, "TextLabel", {
