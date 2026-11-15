@@ -108,32 +108,19 @@ end
 Library._nGui  = nil
 Library._nCont = nil
 
-function Library:_ensureNotify()
-    if self._nGui and self._nGui.Parent then return end
-    local gui = N("ScreenGui", { Name="__LibNotify", ResetOnSpawn=false, ZIndexBehavior=Enum.ZIndexBehavior.Sibling })
-    gui.Parent = CoreGui
-    local cont = C(gui, "Frame", {
-        BackgroundTransparency = 1,
-        Size = UDim2.new(1,0,0,0),
-        Position = UDim2.new(0,0,0,10),
-        ZIndex = 100000,
-    })
-    C(cont, "UIListLayout", {
-        FillDirection      = Enum.FillDirection.Vertical,
-        HorizontalAlignment= Enum.HorizontalAlignment.Right,
-        VerticalAlignment  = Enum.VerticalAlignment.Top,
-        SortOrder          = Enum.SortOrder.LayoutOrder,
-        Padding            = UDim.new(0,4),
-    })
-    self._nGui  = gui
-    self._nCont = cont
-end
+local gui = N("ScreenGui", {
+    Name           = "__LibNotify",
+    ResetOnSpawn   = false,
+    ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
+    IgnoreGuiInset = true,   -- template's parent almost certainly has this
+}) 
 
 function Library:Notify(text, duration, color)
     duration = duration or 4
     self:_ensureNotify()
 
     local frame = C(self._nCont, "Frame", {
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),  -- ADD: matches template
         BorderSizePixel  = 0,
         ClipsDescendants = true,
         ZIndex           = 100001,
@@ -150,17 +137,16 @@ function Library:Notify(text, duration, color)
         })
     end
 
-    -- text label exactly like the template
     local textLabel = C(frame, "TextLabel", {
         Text                   = text,
         RichText               = true,
         AutoLocalize           = false,
         BackgroundColor3       = Color3.fromRGB(0,0,0),
-        BackgroundTransparency = 0.85,          -- <-- dark strip
+        BackgroundTransparency = 0.85,
         TextColor3             = Color3.fromRGB(255,255,255),
         TextSize               = 18,
         FontFace               = FSB,
-        TextStrokeTransparency = 0,             -- <-- visible stroke
+        TextStrokeTransparency = 0,
         TextXAlignment         = Enum.TextXAlignment.Center,
         TextYAlignment         = Enum.TextYAlignment.Center,
         Size                   = UDim2.new(1, -10, 1, -8),
@@ -169,14 +155,13 @@ function Library:Notify(text, duration, color)
         ZIndex                 = 100002,
     })
 
-    -- measure with the real font (SemiBold), like the template did
     local temp = Instance.new("TextLabel")
-    temp.FontFace     = FSB
-    temp.TextSize     = 18
-    temp.Text         = text
-    temp.TextWrapped  = false
-    temp.Parent       = self._nCont
-    temp.Visible      = false
+    temp.FontFace    = FSB
+    temp.TextSize    = 18
+    temp.Text        = text
+    temp.TextWrapped = false
+    temp.Parent      = self._nCont
+    temp.Visible     = false
     task.wait()
     local bounds = temp.TextBounds
     temp:Destroy()
@@ -188,7 +173,7 @@ function Library:Notify(text, duration, color)
     frame:TweenSize(UDim2.new(0, w, 0, h), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true)
 
     task.delay(duration, function()
-        frame:TweenSize(UDim2.new(0, 0, 0, h), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true)
+        frame:TweenSize(UDim2.new(0,0,0,h), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true)
         task.wait(0.3)
         if frame.Parent then frame:Destroy() end
     end)
