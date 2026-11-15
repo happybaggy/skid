@@ -133,10 +133,11 @@ function Library:Notify(text, duration, color)
     duration = duration or 4
     self:_ensureNotify()
     local frame = C(self._nCont, "Frame", {
-        BorderSizePixel = 0,
+        BackgroundColor3 = Color3.fromRGB(255,255,255),
+        BorderSizePixel  = 0,
         ClipsDescendants = true,
         ZIndex = 100001,
-        Size = UDim2.new(0,0,0,0),
+        Size   = UDim2.new(0,0,0,0),
     })
     C(frame, "UIGradient", { Color = self:_grad() })
     if color then
@@ -158,7 +159,7 @@ function Library:Notify(text, duration, color)
         ZIndex                  = 100002,
     })
     local w = math.min(tW(text,18) + 16, 600)
-    local h = 30
+    local h = 26
     frame:TweenSize(UDim2.new(0,w,0,h), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true)
     task.delay(duration, function()
         frame:TweenSize(UDim2.new(0,0,0,h), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true)
